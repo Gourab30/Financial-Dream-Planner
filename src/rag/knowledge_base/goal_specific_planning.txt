@@ -1,0 +1,43 @@
+Planning For Marriage, New Car and New Home (Educational only)
+
+Marriage/wedding budgeting: A wedding budget in India commonly includes
+venue and catering, jewellery and outfits, photography and videography,
+decor, and guest hospitality, and costs vary widely by city, guest count
+and scale. This project's Marriage goal uses a single city-level average
+cost as a starting estimate; an actual wedding budget should be built
+bottom-up from these individual components for a more precise figure.
+
+New car planning: Buying a car usually involves either paying the full
+on-road price upfront or taking a car loan and paying a down payment
+(commonly 10-20% of the price) with the rest financed over a loan tenure.
+This project's New Car goal assumes the full future cost is accumulated
+through SIP savings by the goal year, which is one approach; a car loan
+combined with a smaller SIP is another common alternative not modelled
+here.
+
+New home planning: A home purchase typically requires a down payment
+(commonly around 20% of the property value, since most home loans cover
+up to about 75-80% loan-to-value) plus additional costs such as stamp
+duty, registration charges and interior/furnishing costs, which are on
+top of the base property price. This project's New Home goal projects
+only the base property cost forward with inflation; a real home-buying
+budget should add these additional costs separately.
+
+Why goals are planned separately: Marriage, New Car and New Home are
+modelled as independent goals with independent timelines rather than one
+combined number, because a person's target year for each goal is usually
+different, and because seeing each goal's own required SIP and status
+makes it clear which specific goal is driving a shortfall, rather than
+hiding that detail inside a single combined figure.
+
+Choosing which goals to plan for: A user does not need to select all
+three goals at once. Selecting only the goals that are actually relevant
+in the near term, and adding others later as they become relevant, is a
+reasonable way to keep the required monthly SIP realistic relative to
+current income.
+
+Prioritising when there is a shortfall: When the combined required SIP
+across all selected goals exceeds available monthly capacity, common ways
+to prioritise include ranking goals by which has the nearest target year,
+which is most essential, or which has the smallest funding gap and is
+therefore easiest to make Achievable first.

@@ -1,0 +1,27 @@
+{
+  "results": {
+    "LinearRegression": {
+      "MAE": 8597.81,
+      "R2": 0.8674
+    },
+    "DecisionTreeRegressor": {
+      "MAE": 10440.55,
+      "R2": 0.789
+    },
+    "RandomForestRegressor": {
+      "MAE": 8084.29,
+      "R2": 0.854
+    }
+  },
+  "selected_model": "LinearRegression",
+  "selection_rule": "Highest R2 on held-out test set; ties broken by lowest MAE.",
+  "features_used": [
+    "Age",
+    "City",
+    "Education",
+    "Job_Role"
+  ],
+  "excluded_features": [
+    "Experience (fresher rule - all users assumed to be freshers)"
+  ]
+}

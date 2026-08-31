@@ -1,0 +1,37 @@
+General Financial Planning Guidelines (Educational, not professional advice)
+
+Emergency fund: Before investing towards long-term goals, it is generally
+recommended to build an emergency fund covering 3 to 6 months of essential
+monthly expenses, kept in a liquid, low-risk instrument such as a savings
+account or a liquid mutual fund.
+
+Start early: Because of compounding, starting a Systematic Investment Plan
+(SIP) a few years earlier can substantially reduce the monthly amount needed
+to reach the same goal. Time in the market generally matters more than
+timing the market.
+
+Automate investments: Setting up an automatic monthly transfer into an
+investment account (an SIP) removes the need to remember to invest and
+reduces the temptation to skip a month.
+
+Review periodically: A financial plan should be reviewed at least once a
+year, or whenever there is a major life change (job change, marriage,
+relocation), because salary, expenses and goal costs change over time.
+
+Diversification: Spreading investments across multiple asset classes
+(equity, debt, gold, etc.) instead of a single instrument can help reduce
+the impact of any one investment performing poorly.
+
+Debt before investing: High-interest debt (such as credit card debt)
+should generally be paid down before starting new discretionary
+investments, because the interest cost usually exceeds typical investment
+returns.
+
+Inflation matters: The cost of large goals such as a home, a car or a
+wedding tends to rise every year because of inflation. Planning using
+today's price alone, without adjusting for inflation, will usually
+under-estimate how much is required in the future.
+
+Disclaimer: This project is an educational simulation built for a college
+capstone assignment. It does not constitute professional financial advice,
+and no investment return is guaranteed.

@@ -1,0 +1,25 @@
+City-Wise Cost Differences (Educational only)
+
+Why goal costs differ by city: The base cost of a Marriage, New Car or
+New Home goal varies by city mainly because of differences in local
+income levels, real-estate prices, and the general cost of goods and
+services. Metro cities such as Mumbai, Delhi and Bangalore tend to have
+higher goal costs than other cities in the dataset, largely driven by
+higher real-estate and venue costs.
+
+How a city's base cost is calculated: The underlying dataset records
+goal costs separately for several area types within each city (for
+example Central, North, South and Premium localities). Since a user only
+supplies a city name and not a specific area, this project averages the
+cost across all recorded area types for that city to produce one
+representative base cost per goal.
+
+Supported cities list: Ahmedabad, Bangalore, Chennai, Delhi, Hyderabad,
+Jaipur, Kolkata, Lucknow, Mumbai, Pune.
+
+Metro vs non-metro planning: Because salaries are also predicted using
+city as an input, a higher-cost metro city does not automatically mean a
+goal becomes harder to reach - the salary prediction for that same city
+is also usually higher, and the actual feasibility depends on the ratio
+between the required SIP and the predicted available capacity, not the
+raw cost alone.

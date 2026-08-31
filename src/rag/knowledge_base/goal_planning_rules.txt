@@ -1,0 +1,31 @@
+Goal Planning Rules Used By This Project
+
+Inflation assumption: Future goal costs are projected forward from today's
+city-level base cost using a fixed annual inflation rate applied
+compound-yearly: future_cost = base_cost * (1 + inflation_rate) ^ years.
+
+Required monthly investment: The monthly SIP needed to reach a future goal
+amount is calculated using the standard future-value-of-an-annuity-due
+formula, assuming the expected annual investment return is compounded
+monthly and contributions are made at the start of each month.
+
+Feasibility classification: This project compares the required monthly
+SIP for a goal against the user's available monthly investment capacity
+(their chosen savings percentage multiplied by their predicted monthly
+salary):
+  - Achievable: required amount is fully covered by available capacity.
+  - Challenging: required amount exceeds capacity by up to 25%.
+  - Highly Challenging: required amount exceeds capacity by more than 25%.
+
+Ways to close a shortfall: If a goal is Challenging or Highly Challenging,
+the user can reduce the gap by increasing the goal timeline (more years to
+save), increasing their savings percentage, choosing a lower-cost city or
+goal amount, or a combination of these.
+
+Fresher rule: All users of this project are assumed to be freshers /
+early-career professionals. Years of work experience is never used as an
+input to the salary prediction model.
+
+Goal-wise planning: Marriage, New Car and New Home are always planned as
+separate goals with independent timelines, because a user's target date
+for each goal is usually different.

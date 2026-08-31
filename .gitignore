@@ -1,0 +1,21 @@
+# Environment variables and sensitive keys
+.env
+*.env
+
+# Large machine learning binary files
+*.pkl
+models/*.pkl
+
+# Python bytecode and cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE files
+.vscode/
+.idea/

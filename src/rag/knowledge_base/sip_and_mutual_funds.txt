@@ -1,0 +1,52 @@
+SIP and Mutual Fund Basics (Educational only - no specific fund is recommended)
+
+What is a SIP: A Systematic Investment Plan (SIP) is a way of investing a
+fixed amount into a mutual fund at a regular interval (usually monthly)
+instead of investing the whole amount at once. This project's required
+monthly SIP for each goal is exactly this kind of regular monthly
+investment, calculated so that regular contributions plus assumed growth
+reach the target amount by the goal year.
+
+Lump sum vs SIP: A lump sum is a one-time investment of the full amount,
+while a SIP spreads the investment across many months. SIPs are often
+preferred by salaried earners because they match a monthly income and
+apply rupee-cost averaging - buying more mutual fund units when prices are
+low and fewer when prices are high, which smooths out the impact of market
+ups and downs compared to investing everything on a single date.
+
+NAV and units: A mutual fund pools money from many investors and buys a
+basket of underlying investments (stocks, bonds, or both). Each investor
+owns "units" of the fund, and the Net Asset Value (NAV) is the price of
+one unit on a given day. A SIP instalment buys however many units that
+month's contribution amount can afford at that day's NAV.
+
+Expense ratio: This is the annual fee a mutual fund charges, expressed as
+a percentage of the invested amount, to cover fund management and
+operating costs. A lower expense ratio means more of the investment
+return stays with the investor rather than going toward fees.
+
+Active vs index (passive) funds: An actively managed fund has a fund
+manager choosing investments to try to beat a market benchmark, usually
+at a higher expense ratio. An index fund simply tracks a market benchmark
+(such as a broad equity index) and typically has a lower expense ratio.
+Neither type is guaranteed to deliver a specific return.
+
+ELSS and lock-in: An Equity Linked Savings Scheme (ELSS) is a category of
+equity mutual fund that comes with a mandatory lock-in period (commonly
+three years) during which units cannot be withdrawn. Some mutual fund
+categories, including ELSS, may also be associated with tax benefits under
+Indian tax law, but this project does not calculate or advise on tax
+savings.
+
+Step-up SIP: A step-up (or top-up) SIP is one where the monthly
+instalment is increased periodically, for example once a year in line
+with a salary increment, instead of staying fixed for the whole goal
+horizon. This project's own SIP figures assume a flat monthly amount
+throughout, so a step-up approach would generally need a smaller starting
+instalment than the flat figure shown here to reach the same goal.
+
+CAGR: Compound Annual Growth Rate (CAGR) is a single smoothed-out annual
+growth rate that describes how an investment grew from a starting value
+to an ending value over a period, ignoring the ups and downs along the
+way. It is a common way to compare the historical performance of
+different investments over the same time period.

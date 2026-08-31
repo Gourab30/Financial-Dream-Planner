@@ -1,0 +1,28 @@
+Broad Investment Category Guide (Educational only - no individual stocks,
+no guaranteed returns, not a recommendation to buy any specific product)
+
+Short-term category (goal is 3 years away or less):
+This project recommends a capital-preservation oriented category for
+short-term goals, such as debt-oriented mutual funds, fixed deposits or
+liquid funds. These typically prioritise protecting the invested amount
+over maximising growth, because there is little time to recover from a
+market downturn before the goal is due.
+
+Medium-term category (goal is 4 to 7 years away):
+This project recommends a diversified balanced category for medium-term
+goals, such as hybrid mutual funds that mix equity and debt. This aims to
+balance growth potential with reduced volatility compared to a pure
+equity portfolio.
+
+Long-term category (goal is more than 7 years away):
+This project recommends a diversified long-term growth oriented category
+for long-term goals, such as diversified equity mutual funds. Longer time
+horizons generally allow more time to ride out short-term market
+volatility in pursuit of higher long-term growth.
+
+Important limits of this project:
+- The system never recommends an individual stock, fund house or ticker.
+- The system never guarantees a rate of return; expected_investment_return
+  is a user-adjustable assumption, not a promise.
+- These categories are broad educational buckets only, intended to teach
+  the concept of matching investment risk to time horizon.

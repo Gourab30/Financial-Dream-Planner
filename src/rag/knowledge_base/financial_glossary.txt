@@ -1,0 +1,48 @@
+Quick Financial Terms Glossary (Educational, short definitions only)
+
+SIP: Systematic Investment Plan - investing a fixed amount at regular
+intervals (usually monthly) rather than all at once.
+
+NAV: Net Asset Value - the price of a single unit of a mutual fund on a
+given day.
+
+CAGR: Compound Annual Growth Rate - a single smoothed annual growth rate
+describing how an investment grew from a start value to an end value over
+a period.
+
+Equity: Ownership shares in a company; equity investments (such as
+company stocks or equity mutual funds) generally carry higher potential
+growth and higher short-term volatility than debt investments.
+
+Debt fund: A mutual fund category that invests mainly in fixed-income
+instruments such as bonds and government securities, generally aiming for
+more stable, lower-volatility returns than equity.
+
+Hybrid fund: A mutual fund category that mixes both equity and debt in a
+single fund, aiming to balance growth potential with reduced volatility
+compared to a pure equity fund.
+
+Liquid fund: A category of debt mutual fund that invests in very
+short-term instruments, used mainly for parking money that may be needed
+on short notice, such as an emergency fund, rather than for long-term
+growth.
+
+ELSS: Equity Linked Savings Scheme - a category of equity mutual fund
+with a mandatory lock-in period, sometimes associated with tax benefits
+under Indian tax law.
+
+Asset allocation: How an investor's total money is divided across
+different asset classes (such as equity, debt and gold), based on goals,
+time horizon and risk appetite.
+
+Risk appetite: How much variability or potential short-term loss in
+investment value an investor is comfortable accepting in pursuit of
+higher long-term returns.
+
+Liquidity: How quickly and easily an investment can be converted back
+into cash without a significant loss of value; a savings account is
+highly liquid, while property is not.
+
+Compounding: Earning returns not only on the original invested amount but
+also on the returns that amount has already earned, so growth accelerates
+the longer money stays invested.

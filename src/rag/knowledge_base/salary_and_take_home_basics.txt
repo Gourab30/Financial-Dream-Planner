@@ -1,0 +1,39 @@
+Salary Structure Basics for Freshers (Educational only - not tax advice)
+
+CTC vs in-hand salary: Cost to Company (CTC) is the total yearly cost an
+employer attributes to an employee, and it is usually higher than the
+amount that actually reaches the employee's bank account each month
+("in-hand" or take-home salary). CTC commonly bundles together the basic
+salary, allowances, employer contributions to retirement/provident
+schemes, and sometimes the value of other benefits, so CTC divided by 12
+overstates the real monthly cash available to invest.
+
+Why monthly salary is predicted, not entered directly: This project
+predicts a fresher's likely current monthly salary from Age, City,
+Education and Job Role using a trained regression model, rather than
+asking the user to type in a salary figure, so that a user who does not
+yet have an offer can still get a realistic planning estimate based on
+patterns in similar freshers' salaries.
+
+Typical salary deductions: A salaried employee's monthly payslip commonly
+shows deductions such as employee provident fund (EPF) contributions,
+professional tax (where applicable in that state), and income tax
+deducted at source (TDS) where applicable, in addition to the take-home
+amount actually paid out. The exact amounts depend on the employer's
+salary structure and prevailing tax rules, which this project does not
+calculate.
+
+Available monthly capacity in this project: This project's "available
+monthly capacity" is the user's chosen savings percentage applied to the
+predicted monthly salary. It represents money the user has said they want
+to direct toward these goals, not a prediction of how much they will have
+left after every possible expense, so real-world essential expenses
+(rent, food, transport, existing EMIs) should already be accounted for
+before deciding on that savings percentage.
+
+Salary growth over time: This project predicts a snapshot monthly salary
+for the age and profile supplied; it does not project future salary
+increments or promotions over the goal horizon. Because of this, the
+required monthly SIP figures are conservative in the sense that rising
+income over a long career is not factored in to reduce the burden in
+later years.

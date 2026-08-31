@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dream Ledger — AI Financial Goal Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #10131a;
+    --bg-raised: #171b24;
+    --card: #1b212c;
+    --card-border: #2a3140;
+    --ink: #ece9e2;
+    --ink-dim: #9aa1b2;
+    --ink-faint: #5b6272;
+    --gold: #d1a24a;
+    --gold-dim: #7c6636;
+    --good: #5fb488;
+    --warn: #dfa440;
+    --bad: #d4685b;
+    --serif: 'Newsreader', Georgia, serif;
+    --mono: 'IBM Plex Mono', 'Courier New', monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans);
+    line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.05;
+    background-image: repeating-linear-gradient(180deg, var(--gold) 0 1px, transparent 1px 32px);
+  }
+  .wrap{ max-width:980px; margin:0 auto; padding:0 24px 96px; position:relative; z-index:1;}
+  header{ padding:56px 0 28px; border-bottom:1px solid var(--card-border); margin-bottom:36px;}
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em; color:var(--gold);
+    text-transform:uppercase; margin:0 0 10px;
+  }
+  h1{
+    font-family:var(--serif); font-weight:600; font-size:clamp(32px,5vw,50px);
+    margin:0 0 12px; letter-spacing:-.01em;
+  }
+  header p{ color:var(--ink-dim); max-width:56ch; margin:0; font-size:15px;}
+  .api-row{
+    display:flex; gap:10px; align-items:center; margin-top:22px; font-family:var(--mono); font-size:12.5px;
+    color:var(--ink-faint); flex-wrap:wrap;
+  }
+  .api-row input{
+    background:var(--bg-raised); border:1px solid var(--card-border); color:var(--ink-dim);
+    font-family:var(--mono); font-size:12.5px; padding:7px 10px; border-radius:5px; width:260px;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--ink-faint); flex-shrink:0;}
+  .dot.on{background:var(--good); box-shadow:0 0 8px var(--good);}
+  .dot.off{background:var(--bad); box-shadow:0 0 8px var(--bad);}
+
+  section{ margin-bottom:44px; }
+  .section-title{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-faint); margin:0 0 16px; display:flex; align-items:center; gap:12px;
+  }
+  .section-title::after{ content:""; flex:1; height:1px; background:var(--card-border); }
+
+  .card{ background:var(--card); border:1px solid var(--card-border); border-radius:10px; padding:26px; }
+
+  form.plan-form{ display:grid; grid-template-columns:1fr 1fr; gap:18px 22px; }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field.span2{ grid-column:1 / -1; }
+  label{ font-size:12.5px; color:var(--ink-dim); font-weight:500;}
+  input, select{
+    background:var(--bg-raised); border:1px solid var(--card-border); color:var(--ink);
+    padding:10px 12px; border-radius:7px; font-family:var(--sans); font-size:14px;
+  }
+  input:focus, select:focus{ outline:none; border-color:var(--gold-dim); }
+  .goal-toggle{
+    border:1px solid var(--card-border); border-radius:8px; padding:14px; background:var(--bg-raised);
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .goal-toggle .head{ display:flex; align-items:center; gap:8px; }
+  .goal-toggle .head input[type=checkbox]{ width:16px; height:16px; accent-color:var(--gold); }
+  .goal-toggle .head span{ font-weight:600; font-size:14px; }
+  .goal-toggle input[type=number]{ width:100%; }
+  .goal-toggle small{ color:var(--ink-faint); font-size:11.5px;}
+
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  @media (max-width:720px){ form.plan-form{grid-template-columns:1fr;} .grid3{grid-template-columns:1fr;} }
+
+  button{
+    font-family:var(--sans); font-weight:600; font-size:14px; border:none; border-radius:7px;
+    padding:12px 20px; cursor:pointer; transition:transform .1s ease, opacity .15s ease;
+  }
+  button.primary{ background:var(--gold); color:#171208; }
+  button.primary:hover{ opacity:.9; }
+  button.primary:active{ transform:scale(.98); }
+  button.ghost{ background:transparent; border:1px solid var(--card-border); color:var(--ink-dim); }
+  button.ghost:hover{ color:var(--ink); border-color:var(--gold-dim); }
+  button:disabled{ opacity:.5; cursor:not-allowed; }
+
+  .submit-row{ grid-column:1/-1; display:flex; align-items:center; gap:14px; margin-top:4px; }
+  .submit-row .msg{ font-size:13px; color:var(--bad); font-family:var(--mono); }
+
+  /* ---- Results / Ledger ---- */
+  #results{ display:none; }
+  .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px; }
+  .stat{ background:var(--bg-raised); border:1px solid var(--card-border); border-radius:9px; padding:16px 18px; }
+  .stat .label{ font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); margin-bottom:6px; }
+  .stat .value{ font-family:var(--mono); font-size:22px; color:var(--ink); }
+  .stat .value small{ font-size:13px; color:var(--ink-faint); }
+
+  .ledger{ display:flex; flex-direction:column; gap:1px; background:var(--card-border); border:1px solid var(--card-border); border-radius:10px; overflow:hidden; }
+  .ledger-row{ background:var(--card); padding:18px 20px; display:grid; grid-template-columns: 1.2fr repeat(4, 1fr) auto; gap:16px; align-items:center; }
+  .ledger-head{ background:var(--bg-raised); font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); padding:12px 20px; }
+  .ledger-row .goal-name{ font-family:var(--serif); font-size:17px; }
+  .ledger-row .goal-name .years{ display:block; font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin-top:2px; }
+  .ledger-row .num{ font-family:var(--mono); font-size:13.5px; color:var(--ink-dim); }
+  .ledger-row .num .lbl{ display:block; font-family:var(--sans); font-size:10px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; margin-bottom:2px;}
+  .badge{ font-family:var(--mono); font-size:11px; padding:4px 10px; border-radius:20px; white-space:nowrap; border:1px solid; }
+  .badge.Achievable{ color:var(--good); border-color:var(--good); background:rgba(95,180,136,.1); }
+  .badge.Challenging{ color:var(--warn); border-color:var(--warn); background:rgba(223,164,64,.1); }
+  .badge.Highly.Challenging, .badge.HighlyChallenging{ color:var(--bad); border-color:var(--bad); background:rgba(212,104,91,.1); }
+  .category-note{ grid-column:1/-1; font-size:12px; color:var(--ink-faint); padding-top:2px; }
+
+  .overall{ margin-top:20px; padding:20px; border-radius:10px; border:1px solid var(--card-border); background:var(--bg-raised);
+             display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;}
+  .overall .headline{ font-family:var(--serif); font-size:19px; }
+  .overall .gap{ font-family:var(--mono); font-size:13px; color:var(--ink-dim); }
+  .disclaimer{ font-size:11.5px; color:var(--ink-faint); margin-top:16px; line-height:1.6; }
+
+  /* ---- Agent / RAG panel ---- */
+  .panel-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media (max-width:780px){ .panel-grid{grid-template-columns:1fr;} }
+  textarea{
+    width:100%; min-height:88px; background:var(--bg-raised); border:1px solid var(--card-border);
+    border-radius:7px; color:var(--ink); font-family:var(--sans); font-size:13.5px; padding:11px 12px; resize:vertical;
+  }
+  textarea:focus{ outline:none; border-color:var(--gold-dim); }
+  .panel-out{ margin-top:14px; font-size:13px; color:var(--ink-dim); white-space:pre-wrap; line-height:1.6; }
+  .panel-out .src{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin-top:8px; display:block; }
+  .panel-out.error{ color:var(--bad); }
+  .example{ font-size:11.5px; color:var(--ink-faint); margin-top:8px; font-style:italic; }
+
+  footer{ text-align:center; color:var(--ink-faint); font-size:12px; padding-top:30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Predict · Plan · Invest · Achieve</p>
+    <h1>Dream Ledger</h1>
+    <p>A goal-wise financial plan for freshers — salary predicted by a trained
+       regression model, goal costs projected forward with inflation, and each
+       line entered against what your savings can actually carry.</p>
+    <div class="api-row">
+      <span class="dot" id="apiDot"></span>
+      <span id="apiStatusText">checking API…</span>
+      <span>·</span>
+      <span>API base:</span>
+      <input id="apiBase" value="http://127.0.0.1:8000" />
+      <button class="ghost" id="recheckBtn" style="padding:5px 12px;font-size:12px;">recheck</button>
+    </div>
+  </header>
+
+  <section>
+    <p class="section-title">Your details</p>
+    <div class="card">
+      <form class="plan-form" id="planForm">
+        <div class="field">
+          <label>Name (optional)</label>
+          <input id="f_name" placeholder="Rahul" />
+        </div>
+        <div class="field">
+          <label>Age</label>
+          <input id="f_age" type="number" min="18" max="65" value="22" />
+        </div>
+        <div class="field">
+          <label>City</label>
+          <input id="f_city" list="cityList" placeholder="Bangalore" value="Bangalore" />
+          <datalist id="cityList"></datalist>
+        </div>
+        <div class="field">
+          <label>Savings target (% of income)</label>
+          <input id="f_savings" type="number" min="1" max="100" value="20" />
+        </div>
+        <div class="field">
+          <label>Education</label>
+          <select id="f_education">
+            <option>B.Tech</option><option>B.E.</option><option>BCA</option><option>MCA</option>
+            <option>MBA</option><option>M.Tech</option><option>B.Sc</option><option>M.Sc</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Job role</label>
+          <select id="f_job">
+            <option>Software Engineer</option><option>Web Developer</option><option>UI UX Designer</option>
+            <option>QA Engineer</option><option>DevOps Engineer</option><option>Business Analyst</option>
+            <option>Project Coordinator</option><option>Technical Support Engineer</option>
+          </select>
+        </div>
+        <div class="field span2">
+          <label>Expected annual investment return</label>
+          <input id="f_return" type="number" min="1" max="30" step="0.5" value="9" />
+        </div>
+
+        <div class="field span2">
+          <label style="margin-bottom:2px;">Goals</label>
+          <div class="grid3">
+            <div class="goal-toggle">
+              <div class="head"><input type="checkbox" id="g_marriage_on" checked><span>Marriage</span></div>
+              <input type="number" id="g_marriage_years" value="5" min="1" max="50" />
+              <small>years from now</small>
+            </div>
+            <div class="goal-toggle">
+              <div class="head"><input type="checkbox" id="g_car_on" checked><span>New Car</span></div>
+              <input type="number" id="g_car_years" value="4" min="1" max="50" />
+              <small>years from now</small>
+            </div>
+            <div class="goal-toggle">
+              <div class="head"><input type="checkbox" id="g_home_on" checked><span>New Home</span></div>
+              <input type="number" id="g_home_years" value="10" min="1" max="50" />
+              <small>years from now</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-row">
+          <button type="submit" class="primary" id="submitBtn">Generate plan</button>
+          <button type="button" class="ghost" id="agentFillBtn">Get AI advisor note too</button>
+          <span class="msg" id="formMsg"></span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section id="results">
+    <p class="section-title">Your ledger</p>
+    <div class="card">
+      <div class="stat-row">
+        <div class="stat"><div class="label">Predicted monthly salary</div><div class="value" id="r_salary">—</div></div>
+        <div class="stat"><div class="label">Available monthly capacity</div><div class="value" id="r_capacity">—</div></div>
+        <div class="stat"><div class="label">Total required SIP</div><div class="value" id="r_required">—</div></div>
+      </div>
+
+      <div class="ledger" id="ledger"></div>
+
+      <div class="overall" id="overallBox">
+        <div>
+          <div class="headline" id="overallStatus">—</div>
+          <div class="gap" id="overallGap">—</div>
+        </div>
+        <div id="advisorNote" style="max-width:420px;font-size:12.5px;color:var(--ink-dim);"></div>
+      </div>
+      <p class="disclaimer">Educational simulation for a college capstone project — not professional financial advice. Investment returns are assumptions, never guarantees.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-title">Ask the agent</p>
+    <div class="panel-grid">
+      <div class="card">
+        <label style="display:block;margin-bottom:8px;">Describe your plan in plain English</label>
+        <textarea id="agentInput">I am 24, live in Pune, expect to start as a Web Developer, want to marry in 6 years, buy a car in 3 years and save 15% of my income.</textarea>
+        <div style="margin-top:10px;"><button class="primary" id="agentSendBtn">Ask agent</button></div>
+        <div class="panel-out" id="agentOut"></div>
+      </div>
+      <div class="card">
+        <label style="display:block;margin-bottom:8px;">Ask a knowledge-base question</label>
+        <textarea id="ragInput">Why is an emergency fund recommended before investing?</textarea>
+        <div style="margin-top:10px;"><button class="primary" id="ragSendBtn">Ask</button></div>
+        <div class="panel-out" id="ragOut"></div>
+        <div class="example">Try an out-of-scope question too, e.g. "What is the capital of France?" — the system will say it's unavailable rather than guessing.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Dream Ledger · runs entirely on your machine · no paid API used</footer>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+function apiBase(){ return $('apiBase').value.replace(/\/$/, ''); }
+
+function fmtINR(n){
+  if (n === null || n === undefined) return '—';
+  const num = Math.round(n);
+  const s = Math.abs(num).toString();
+  let last3 = s.substring(s.length - 3);
+  let other = s.substring(0, s.length - 3);
+  if (other !== '') last3 = ',' + last3;
+  const formatted = other.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + last3;
+  return (num < 0 ? '-₹' : '₹') + formatted;
+}
+
+async function checkApi(){
+  const dot = $('apiDot'); const txt = $('apiStatusText');
+  try{
+    const res = await fetch(apiBase() + '/', { method:'GET' });
+    if(!res.ok) throw new Error();
+    dot.className = 'dot on'; txt.textContent = 'API connected';
+    loadCities();
+  }catch(e){
+    dot.className = 'dot off';
+    txt.textContent = 'API not reachable — run `python main.py` in the project folder first';
+  }
+}
+
+async function loadCities(){
+  try{
+    const res = await fetch(apiBase() + '/cities');
+    const data = await res.json();
+    const dl = $('cityList');
+    dl.innerHTML = '';
+    (data.cities || []).forEach(c => {
+      const opt = document.createElement('option'); opt.value = c; dl.appendChild(opt);
+    });
+  }catch(e){ /* silent - not critical */ }
+}
+
+function buildRequestBody(){
+  const body = {
+    age: parseInt($('f_age').value, 10),
+    city: $('f_city').value.trim(),
+    education: $('f_education').value,
+    job_role: $('f_job').value,
+    savings_percent: parseFloat($('f_savings').value),
+    expected_investment_return: parseFloat($('f_return').value) / 100,
+  };
+  const name = $('f_name').value.trim();
+  if (name) body.name = name;
+  if ($('g_marriage_on').checked) body.marriage_years = parseInt($('g_marriage_years').value, 10);
+  if ($('g_car_on').checked) body.car_years = parseInt($('g_car_years').value, 10);
+  if ($('g_home_on').checked) body.home_years = parseInt($('g_home_years').value, 10);
+  return body;
+}
+
+function statusClass(status){ return status.replace(/\s+/g, '.'); }
+
+function renderPlan(plan){
+  $('results').style.display = 'block';
+  $('r_salary').innerHTML = fmtINR(plan.predicted_monthly_salary) + ' <small>/mo</small>';
+  $('r_capacity').innerHTML = fmtINR(plan.available_monthly_capacity) + ' <small>/mo</small>';
+  $('r_required').innerHTML = fmtINR(plan.total_required_monthly_sip) + ' <small>/mo</small>';
+
+  const ledger = $('ledger');
+  ledger.innerHTML = '';
+  const head = document.createElement('div');
+  head.className = 'ledger-head';
+  head.style.display = 'grid';
+  head.style.gridTemplateColumns = '1.2fr repeat(4, 1fr) auto';
+  head.style.gap = '16px';
+  head.innerHTML = '<div>Goal</div><div>Cost today</div><div>Future cost</div><div>Required SIP</div><div>Category</div><div>Status</div>';
+  ledger.appendChild(head);
+
+  plan.goals.forEach(g => {
+    const row = document.createElement('div');
+    row.className = 'ledger-row';
+    row.innerHTML = `
+      <div class="goal-name">${g.goal_type}<span class="years">${g.years} yr horizon</span></div>
+      <div class="num"><span class="lbl">Today</span>${fmtINR(g.base_cost_today)}</div>
+      <div class="num"><span class="lbl">Future</span>${fmtINR(g.future_cost)}</div>
+      <div class="num"><span class="lbl">Monthly SIP</span>${fmtINR(g.required_monthly_sip)}</div>
+      <div class="num" style="font-family:var(--sans);font-size:12px;">${g.recommended_category.split(':')[0]}</div>
+      <div><span class="badge ${statusClass(g.status)}">${g.status}</span></div>
+    `;
+    ledger.appendChild(row);
+  });
+
+  const gap = plan.overall_shortfall_or_surplus;
+  $('overallStatus').textContent = `Overall: ${plan.overall_status}`;
+  $('overallStatus').style.color = gap > 0 ? 'var(--bad)' : 'var(--good)';
+  $('overallGap').textContent = gap > 0
+    ? `Shortfall of ${fmtINR(gap)}/month across all selected goals`
+    : `Surplus of ${fmtINR(Math.abs(gap))}/month across all selected goals`;
+
+  $('advisorNote').textContent = plan.ai_advisor_feedback || '';
+}
+
+$('planForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  await submitPlan(false);
+});
+
+$('agentFillBtn').addEventListener('click', async () => {
+  await submitPlan(true);
+});
+
+async function submitPlan(withAgent){
+  const msg = $('formMsg'); msg.textContent = '';
+  const btn = $('submitBtn'); btn.disabled = true; btn.textContent = withAgent ? 'Asking advisor…' : 'Calculating…';
+  try{
+    const endpoint = withAgent ? '/plan/agent' : '/plan';
+    const res = await fetch(apiBase() + endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(buildRequestBody()),
+    });
+    const data = await res.json();
+    if(!res.ok){ throw new Error(data.detail || 'Request failed'); }
+    renderPlan(data);
+    $('results').scrollIntoView({ behavior:'smooth', block:'start' });
+  }catch(err){
+    msg.textContent = err.message;
+  }finally{
+    btn.disabled = false; btn.textContent = 'Generate plan';
+  }
+}
+
+$('agentSendBtn').addEventListener('click', async () => {
+  const out = $('agentOut'); out.className = 'panel-out'; out.textContent = 'Thinking…';
+  try{
+    const res = await fetch(apiBase() + '/agent/message', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ message: $('agentInput').value }),
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.detail || 'Request failed');
+    if(data.intent === 'plan' && data.plan){
+      renderPlan(data.plan);
+      $('results').scrollIntoView({ behavior:'smooth', block:'start' });
+      out.textContent = 'Parsed your message into a plan — see the ledger above.\nExtracted: ' + JSON.stringify(data.extracted);
+    } else if (data.error){
+      out.textContent = 'Could not build a plan: ' + data.error + '\nExtracted so far: ' + JSON.stringify(data.extracted || {});
+    } else {
+      out.textContent = data.answer || JSON.stringify(data);
+    }
+  }catch(err){
+    out.className = 'panel-out error'; out.textContent = err.message;
+  }
+});
+
+$('ragSendBtn').addEventListener('click', async () => {
+  const out = $('ragOut'); out.className = 'panel-out'; out.textContent = 'Searching knowledge base…';
+  try{
+    const res = await fetch(apiBase() + '/rag/query', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ query: $('ragInput').value }),
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.detail || 'Request failed');
+    let text = data.answer;
+    if (data.grounded && data.sources && data.sources.length){
+      text += '\n\n' + data.sources.map(s => `[source: ${s.source}]`).join(' ');
+    }
+    out.textContent = text;
+  }catch(err){
+    out.className = 'panel-out error'; out.textContent = err.message;
+  }
+});
+
+$('recheckBtn').addEventListener('click', checkApi);
+checkApi();
+</script>
+</body>
+</html>
