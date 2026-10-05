@@ -7,13 +7,10 @@ MODEL_PATH = os.path.join(ROOT, "models", "salary_model.pkl")
 
 
 def _apply_sklearn_compat_shim():
-    """The bundled salary_model.pkl was trained with an older scikit-learn
-    version. Newer scikit-learn versions can fail to unpickle it because an
-    internal (private) helper class referenced by the pickle no longer
-    exists. This adds a harmless stand-in so the file still loads correctly
-    on newer scikit-learn installs. Safe to run on any version -  it's a
-    no-op if the class is already present or the module layout differs.
-    """
+    """The saved model was trained on an older scikit-learn version, and
+    newer versions can fail to load it because of an internal class that
+    got moved/removed. This just patches that back in so the pickle still
+    loads. Doesn't do anything if it's not needed."""
     try:
         from sklearn.compose import _column_transformer as _ct
         if not hasattr(_ct, "_RemainderColsList"):
@@ -28,12 +25,9 @@ _apply_sklearn_compat_shim()
 
 
 class SalaryPredictor:
-    """Loads the model trained by train_model.py and predicts current monthly salary.
-
-    This is the ONLY place a machine-learning model is used for a number in the
-    whole app (the "Salary Prediction Tool"). Everything downstream (future goal
-    cost, SIP, feasibility) is deterministic arithmetic in financial_calculator.py.
-    """
+    """Loads the model trained by train_model.py and predicts a monthly salary
+    for a given age/city/education/job role. This is the only place the ML
+    model gets used - everything after this is plain arithmetic."""
 
     def __init__(self, model_path: str = MODEL_PATH):
         if not os.path.exists(model_path):

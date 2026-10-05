@@ -1,24 +1,15 @@
-"""
-Deterministic financial math. NOTHING in this file is ever produced by an LLM -
-the Agent only ever *calls* these functions; it never invents these numbers itself.
-
-Inflation assumption: annual goal-cost inflation is set to 6% per year
-(DEFAULT_ANNUAL_INFLATION = 0.06), the standard real-world assumption used for
-this kind of goal-cost projection in India. It is kept as a single named
-constant so it can be changed in one place if a different rate is needed.
-"""
 
 DEFAULT_ANNUAL_INFLATION = 0.06          # 6% per year
 DEFAULT_MAX_SIP_RATIO = 0.40             # SIP cannot sanely exceed 40% of salary
 
-# Feasibility classification thresholds, applied to (required / available) ratio.
-# Documented rule (student-defined, see README section "Feasibility Rule"):
-#   ratio <= 1.00               -> "Achievable"
-#   1.00 <  ratio <= 1.25       -> "Challenging"      (up to 25% short)
-#   ratio  > 1.25               -> "Highly Challenging"
+# ratio = required SIP / available capacity
+#   <= 1.00  -> Achievable
+#   <= 1.25  -> Challenging (short by up to 25%)
+#   >  1.25  -> Highly Challenging
 CHALLENGING_THRESHOLD = 1.25
 
-
+CAR_SIP_PERCENT = 0.80
+CAR_LOAN_PERCENT = 0.20
 class FinancialCalculator:
     """Pure, deterministic financial calculations. No randomness, no LLM calls."""
 
@@ -76,14 +67,20 @@ class FinancialCalculator:
     @staticmethod
     def recommend_investment_category(years: int) -> str:
         """
-        Documented category rule (broad, educational only - never individual stocks
-        and never a guaranteed-return claim):
-          <= 3 years   -> Short-term  -> capital-preservation oriented (e.g. debt/FD-like)
-          4-7 years    -> Medium-term -> diversified balanced (hybrid equity+debt)
-          > 7 years    -> Long-term   -> diversified long-term growth (equity-oriented)
+        Broad category based on how far away the goal is. Educational only -
+        never a specific stock/fund, never a promised return.
+          <= 3 years  -> short-term, capital-preservation (debt funds / FDs)
+          4-7 years   -> medium-term, balanced mix of equity + debt
+          > 7 years   -> long-term, more equity-heavy for growth
         """
         if years <= 3:
             return "Short-Term: Capital-preservation oriented (e.g. debt funds / FDs / liquid funds)"
         if years <= 7:
             return "Medium-Term: Diversified balanced category (hybrid equity + debt funds)"
         return "Long-Term: Diversified long-term growth oriented category (equity-oriented mutual funds)"
+    @staticmethod
+    def calculate_car_financing(future_car_cost: float):
+        sip_amount = future_car_cost * CAR_SIP_PERCENT
+        loan_amount = future_car_cost * CAR_LOAN_PERCENT
+
+        return round(sip_amount, 2), round(loan_amount, 2)

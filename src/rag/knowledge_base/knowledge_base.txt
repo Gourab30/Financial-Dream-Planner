@@ -1,0 +1,95 @@
+Financial Planning & Goal Investment Notes (educational only, not professional advice)
+
+GENERAL GUIDELINES
+
+Emergency fund: Before investing towards long-term goals, it is generally
+recommended to build an emergency fund covering 3 to 6 months of essential
+monthly expenses, kept in a liquid, low-risk instrument such as a savings
+account or a liquid mutual fund.
+
+Start early: Because of compounding, starting a Systematic Investment Plan
+(SIP) a few years earlier can substantially reduce the monthly amount needed
+to reach the same goal. Time in the market generally matters more than
+timing the market.
+
+Automate investments: Setting up an automatic monthly transfer into an
+investment account (an SIP) removes the need to remember to invest and
+reduces the temptation to skip a month.
+
+Review periodically: A financial plan should be reviewed at least once a
+year, or whenever there is a major life change (job change, marriage,
+relocation), because salary, expenses and goal costs change over time.
+
+Diversification: Spreading investments across multiple asset classes
+(equity, debt, gold, etc.) instead of a single instrument can help reduce
+the impact of any one investment performing poorly.
+
+Debt before investing: High-interest debt (such as credit card debt)
+should generally be paid down before starting new discretionary
+investments, because the interest cost usually exceeds typical investment
+returns.
+
+Inflation matters: The cost of large goals such as a home, a car or a
+wedding tends to rise every year because of inflation. Planning using
+today's price alone, without adjusting for inflation, will usually
+under-estimate how much is required in the future.
+
+HOW THIS PROJECT CALCULATES A PLAN
+
+Inflation assumption: Future goal costs are projected forward from today's
+city-level base cost using a fixed annual inflation rate applied
+compound-yearly: future_cost = base_cost * (1 + inflation_rate) ^ years.
+
+Required monthly investment: The monthly SIP needed to reach a future goal
+amount is calculated using the standard future-value-of-an-annuity-due
+formula, assuming the expected annual investment return is compounded
+monthly and contributions are made at the start of each month.
+
+Feasibility classification: This project compares the required monthly
+SIP for a goal against the user's available monthly investment capacity
+(their chosen savings percentage multiplied by their predicted monthly
+salary):
+  - Achievable: required amount is fully covered by available capacity.
+  - Challenging: required amount exceeds capacity by up to 25%.
+  - Highly Challenging: required amount exceeds capacity by more than 25%.
+
+Ways to close a shortfall: If a goal is Challenging or Highly Challenging,
+the user can reduce the gap by increasing the goal timeline (more years to
+save), increasing their savings percentage, choosing a lower-cost city or
+goal amount, or a combination of these.
+
+This project is built around freshers / early-career professionals, so
+years of work experience is never used as an input to the salary
+prediction model.
+
+Goal-wise planning: Marriage, New Car and New Home are always planned as
+separate goals with independent timelines, because a user's target date
+for each goal is usually different.
+
+INVESTMENT CATEGORIES
+
+Short-term category (goal is 3 years away or less): a capital-preservation
+oriented category, such as debt-oriented mutual funds, fixed deposits or
+liquid funds. These typically prioritise protecting the invested amount
+over maximising growth, because there is little time to recover from a
+market downturn before the goal is due.
+
+Medium-term category (goal is 4 to 7 years away): a diversified balanced
+category, such as hybrid mutual funds that mix equity and debt. This aims
+to balance growth potential with reduced volatility compared to a pure
+equity portfolio.
+
+Long-term category (goal is more than 7 years away): a diversified
+long-term growth oriented category, such as diversified equity mutual
+funds. Longer time horizons generally allow more time to ride out
+short-term market volatility in pursuit of higher long-term growth.
+
+Limits: this project never recommends an individual stock, fund house or
+ticker, and never guarantees a rate of return - expected_investment_return
+is a user-adjustable assumption, not a promise. These categories are broad
+educational buckets only, meant to illustrate matching investment risk to
+time horizon.
+
+Disclaimer: This project is an educational simulation built for a college
+project. It does not constitute professional financial advice, and no
+investment return is guaranteed.

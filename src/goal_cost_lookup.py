@@ -11,14 +11,7 @@ GOAL_COLUMN_MAP = {
 
 
 class GoalCostLookup:
-    """
-    Looks up today's base cost of a goal (Marriage / New Car / New Home) for a city.
-
-    The dataset has several Area_Type rows per city (Central, North, Premium, ...).
-    Since the user only supplies a City (not an area type), we use the city-wide
-    AVERAGE across all area types as the base cost. This is a documented,
-    reproducible rule (see README "Goal Cost Lookup Rule").
-    """
+    
 
     def __init__(self, csv_path: str = DATA_PATH):
         if not os.path.exists(csv_path):

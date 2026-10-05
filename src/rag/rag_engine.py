@@ -1,12 +1,4 @@
-"""
-Fully local RAG (Retrieval-Augmented Generation) engine.
 
-Design choice (documented): instead of calling a paid embeddings API, chunks
-are embedded locally with scikit-learn's TfidfVectorizer, and the "vector
-store" is simply the in-memory TF-IDF matrix. This satisfies the assignment
-requirement (chunk -> embed -> store -> retrieve -> ground the answer) while
-staying 100% local and free, matching rule "No paid API is required."
-"""
 import os
 import glob
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -14,13 +6,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 KB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "knowledge_base")
 
-# Below this similarity score we treat the knowledge base as NOT containing the
-# answer, and say so rather than letting an LLM invent one (hallucination control).
 SIMILARITY_THRESHOLD = 0.12
-# A single coincidentally-shared word (e.g. "capital" matching "capital-preservation")
-# can otherwise produce a misleadingly high cosine score on a short query. Requiring
-# at least MIN_SHARED_TERMS distinct vocabulary terms in common is a cheap, effective
-# extra guard against that specific false-positive pattern.
+
 MIN_SHARED_TERMS = 2
 CHUNK_SIZE_CHARS = 400
 CHUNK_OVERLAP_CHARS = 60
@@ -73,12 +60,9 @@ class RAGEngine:
             if scores[i] < SIMILARITY_THRESHOLD:
                 continue
             shared_terms = int(((self.matrix[i] > 0) & query_terms_present).sum())
-            # Always require >= MIN_SHARED_TERMS distinct vocabulary words in common.
-            # A single shared word (e.g. "capital" matching "capital-preservation", or
-            # "today" matching "today's price") is not enough evidence that a short,
-            # generic-sounding query is actually answerable from this knowledge base -
-            # this is what stops the Agent from grounding "What is the capital of
-            # France?" or "What's the weather today?" in unrelated finance chunks.
+            # one shared word isn't enough evidence - e.g. "capital" matching
+            # "capital-preservation" shouldn't be enough to ground "what's the
+            # capital of France?" in a finance chunk
             if shared_terms < MIN_SHARED_TERMS or n_query_terms < MIN_SHARED_TERMS:
                 continue
             results.append({
