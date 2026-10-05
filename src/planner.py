@@ -11,10 +11,10 @@ GOAL_YEAR_FIELDS = {
 
 class FinancialPlanner:
     """
-    Orchestrates: Salary Prediction Tool -> Future Cost Tool -> Investment
-    Calculator Tool -> Feasibility Tool -> Recommendation Tool.
-    Every number returned here is deterministic; the ML model is used ONLY for
-    the salary prediction step.
+    Ties everything together: predict salary -> project each goal's future
+    cost -> required monthly SIP -> feasibility -> category suggestion.
+    The ML model is only used for the salary step; everything else here is
+    plain arithmetic.
     """
 
     def __init__(self):
@@ -26,8 +26,8 @@ class FinancialPlanner:
         cities = self.cost_lookup.get_cities()
         if city not in cities:
             raise ValueError(f"Unknown city '{city}'. Supported cities: {', '.join(cities)}")
-        # Education / Job_Role unknowns are allowed through to the model (OneHotEncoder
-        # handles unseen categories), but we flag it so the caller can warn the user.
+        # unknown Education/Job_Role values are fine - the encoder just ignores
+        # them at prediction time instead of crashing
 
     def generate_plan(self, age: int, city: str, education: str, job_role: str,
                        savings_percent: float, expected_return: float = 0.09,

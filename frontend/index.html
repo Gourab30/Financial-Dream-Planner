@@ -128,9 +128,7 @@
   .overall .gap{ font-family:var(--mono); font-size:13px; color:var(--ink-dim); }
   .disclaimer{ font-size:11.5px; color:var(--ink-faint); margin-top:16px; line-height:1.6; }
 
-  /* ---- Agent / RAG panel ---- */
-  .panel-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-  @media (max-width:780px){ .panel-grid{grid-template-columns:1fr;} }
+  /* ---- Knowledge base panel ---- */
   textarea{
     width:100%; min-height:88px; background:var(--bg-raised); border:1px solid var(--card-border);
     border-radius:7px; color:var(--ink); font-family:var(--sans); font-size:13.5px; padding:11px 12px; resize:vertical;
@@ -227,7 +225,7 @@
 
         <div class="submit-row">
           <button type="submit" class="primary" id="submitBtn">Generate plan</button>
-          <button type="button" class="ghost" id="agentFillBtn">Get AI advisor note too</button>
+          <button type="button" class="ghost" id="advisorBtn">Get AI advisor note too</button>
           <span class="msg" id="formMsg"></span>
         </div>
       </form>
@@ -257,21 +255,13 @@
   </section>
 
   <section>
-    <p class="section-title">Ask the agent</p>
-    <div class="panel-grid">
-      <div class="card">
-        <label style="display:block;margin-bottom:8px;">Describe your plan in plain English</label>
-        <textarea id="agentInput">I am 24, live in Pune, expect to start as a Web Developer, want to marry in 6 years, buy a car in 3 years and save 15% of my income.</textarea>
-        <div style="margin-top:10px;"><button class="primary" id="agentSendBtn">Ask agent</button></div>
-        <div class="panel-out" id="agentOut"></div>
-      </div>
-      <div class="card">
-        <label style="display:block;margin-bottom:8px;">Ask a knowledge-base question</label>
-        <textarea id="ragInput">Why is an emergency fund recommended before investing?</textarea>
-        <div style="margin-top:10px;"><button class="primary" id="ragSendBtn">Ask</button></div>
-        <div class="panel-out" id="ragOut"></div>
-        <div class="example">Try an out-of-scope question too, e.g. "What is the capital of France?" — the system will say it's unavailable rather than guessing.</div>
-      </div>
+    <p class="section-title">Ask the knowledge base</p>
+    <div class="card">
+      <label style="display:block;margin-bottom:8px;">Ask a question about the guidelines this project follows</label>
+      <textarea id="ragInput">Why is an emergency fund recommended before investing?</textarea>
+      <div style="margin-top:10px;"><button class="primary" id="ragSendBtn">Ask</button></div>
+      <div class="panel-out" id="ragOut"></div>
+      <div class="example">Try an out-of-scope question too, e.g. "What is the capital of France?" — the system will say it's unavailable rather than guessing.</div>
     </div>
   </section>
 
@@ -382,15 +372,15 @@ $('planForm').addEventListener('submit', async (e) => {
   await submitPlan(false);
 });
 
-$('agentFillBtn').addEventListener('click', async () => {
+$('advisorBtn').addEventListener('click', async () => {
   await submitPlan(true);
 });
 
-async function submitPlan(withAgent){
+async function submitPlan(withAdvisor){
   const msg = $('formMsg'); msg.textContent = '';
-  const btn = $('submitBtn'); btn.disabled = true; btn.textContent = withAgent ? 'Asking advisor…' : 'Calculating…';
+  const btn = $('submitBtn'); btn.disabled = true; btn.textContent = withAdvisor ? 'Asking advisor…' : 'Calculating…';
   try{
-    const endpoint = withAgent ? '/plan/agent' : '/plan';
+    const endpoint = withAdvisor ? '/plan/advice' : '/plan';
     const res = await fetch(apiBase() + endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -406,29 +396,6 @@ async function submitPlan(withAgent){
     btn.disabled = false; btn.textContent = 'Generate plan';
   }
 }
-
-$('agentSendBtn').addEventListener('click', async () => {
-  const out = $('agentOut'); out.className = 'panel-out'; out.textContent = 'Thinking…';
-  try{
-    const res = await fetch(apiBase() + '/agent/message', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ message: $('agentInput').value }),
-    });
-    const data = await res.json();
-    if(!res.ok) throw new Error(data.detail || 'Request failed');
-    if(data.intent === 'plan' && data.plan){
-      renderPlan(data.plan);
-      $('results').scrollIntoView({ behavior:'smooth', block:'start' });
-      out.textContent = 'Parsed your message into a plan — see the ledger above.\nExtracted: ' + JSON.stringify(data.extracted);
-    } else if (data.error){
-      out.textContent = 'Could not build a plan: ' + data.error + '\nExtracted so far: ' + JSON.stringify(data.extracted || {});
-    } else {
-      out.textContent = data.answer || JSON.stringify(data);
-    }
-  }catch(err){
-    out.className = 'panel-out error'; out.textContent = err.message;
-  }
-});
 
 $('ragSendBtn').addEventListener('click', async () => {
   const out = $('ragOut'); out.className = 'panel-out'; out.textContent = 'Searching knowledge base…';

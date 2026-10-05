@@ -12,13 +12,13 @@ from pydantic import BaseModel
 from src.schemas import PlanRequest, PlanResponse
 from src.planner import FinancialPlanner
 from src.goal_cost_lookup import GoalCostLookup
-from src.groq_agent import GroqAgent
+from src.advisor import get_advisor_note
 from src.rag.rag_engine import RAGEngine
 
-app = FastAPI(title="AI Financial Dream Planner", version="2.0.0")
+app = FastAPI(title="AI Financial Dream Planner")
 
-# CORS: allows the standalone frontend/index.html (opened as a local file, or
-# served from a different port) to call this API from the browser.
+# lets the standalone frontend/index.html (opened as a local file, or served
+# from a different port) call this API from the browser
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -29,12 +29,7 @@ app.add_middleware(
 
 planner = FinancialPlanner()
 lookup = GoalCostLookup()
-agent = GroqAgent()
 rag = RAGEngine()
-
-
-class AgentMessage(BaseModel):
-    message: str
 
 
 class RagQuery(BaseModel):
@@ -63,15 +58,16 @@ def create_plan(request: PlanRequest):
             expected_return=request.expected_investment_return,
             marriage_years=request.marriage_years,
             car_years=request.car_years,
-            home_years=request.home_years,
+            # home_years=request.home_years,
             name=request.name,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.post("/plan/agent")
-def create_plan_with_agent(request: PlanRequest):
+@app.post("/plan/advice")
+def create_plan_with_advice(request: PlanRequest):
+    
     try:
         plan = planner.generate_plan(
             age=request.age,
@@ -82,25 +78,19 @@ def create_plan_with_agent(request: PlanRequest):
             expected_return=request.expected_investment_return,
             marriage_years=request.marriage_years,
             car_years=request.car_years,
-            home_years=request.home_years,
+            # home_years=request.home_years,
             name=request.name,
         )
-        plan["ai_advisor_feedback"] = agent.enrich_plan(plan)
+        plan["ai_advisor_feedback"] = get_advisor_note(plan)
         return plan
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.post("/agent/message")
-def agent_message(payload: AgentMessage):
-    """Natural-language entry point: the Agent decides intent (plan vs knowledge
-    question), extracts fields, and calls the right deterministic tool(s)."""
-    return agent.handle_message(payload.message)
-
-
 @app.post("/rag/query")
 def rag_query(payload: RagQuery):
-    """Direct RAG lookup - grounded answer, or an explicit 'not available' message."""
+    """Looks the question up in the local knowledge base - returns a grounded
+    answer, or says it isn't covered instead of guessing."""
     return rag.answer(payload.query)
 
 

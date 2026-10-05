@@ -12,7 +12,7 @@ class PlanRequest(BaseModel):
     # Each goal is optional - a user can plan for any subset of Marriage / New Car / New Home.
     marriage_years: Optional[int] = Field(None, ge=1, le=50)
     car_years: Optional[int] = Field(None, ge=1, le=50)
-    home_years: Optional[int] = Field(None, ge=1, le=50)
+    # home_years: Optional[int] = Field(None, ge=1, le=50)
 
     savings_percent: float = Field(..., description="Percent of monthly income the user wants to invest, e.g. 20 for 20%")
     expected_investment_return: float = Field(0.09, description="Assumed annual investment return, e.g. 0.09 for 9%")
